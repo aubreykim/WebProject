@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.mystudy.project.mybatis.DBService;
+import com.mystudy.project.vo.CartVO;
 import com.mystudy.project.vo.ProductVO;
 import com.mystudy.project.vo.ReviewVO;
 import com.mystudy.project.vo.SizeVO;
@@ -86,5 +87,6 @@ public class DAO {
 		List<ReviewVO> list = ss.selectList("project.selectReview", map);
 		return list;
 	}
+	
 
 }

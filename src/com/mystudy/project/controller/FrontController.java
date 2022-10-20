@@ -1,6 +1,7 @@
 package com.mystudy.project.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mystudy.project.common.Paging;
 import com.mystudy.project.dao.DAO;
+import com.mystudy.project.vo.CartVO;
 import com.mystudy.project.vo.ProductVO;
 import com.mystudy.project.vo.ReviewVO;
 import com.mystudy.project.vo.SizeVO;
@@ -25,7 +27,6 @@ public class FrontController extends HttpServlet {
 		response.setContentType("text/html; charset=UTF-8");
 		
 		String type = request.getParameter("type");
-
 		System.out.println(type);
 		
 		if (type.equals("productlist")) {
@@ -47,7 +48,6 @@ public class FrontController extends HttpServlet {
 			
 			request.setAttribute("category", category);
 			request.setAttribute("categoryNo", categoryNo);
-			
 		
 			Paging p = paging(categoryNo, request);			
 			request.setAttribute("p", p);
@@ -63,7 +63,6 @@ public class FrontController extends HttpServlet {
 				List<ProductVO> productList = DAO.orderName(Integer.valueOf(categoryNo), p.getBegin(), p.getEnd());
 				request.setAttribute("productList", productList);												
 			}
-
 			
 			request.getRequestDispatcher("product_list.jsp").forward(request, response);
 			
@@ -84,7 +83,7 @@ public class FrontController extends HttpServlet {
 			List<ReviewVO> reviewList = DAO.getProductReview(Integer.valueOf(productNo), 1, 3);
 			System.out.println(reviewList);
 			request.setAttribute("reviewList", reviewList);
-
+			
 			request.getRequestDispatcher("product_detail.jsp").forward(request, response);
 		}
 		
@@ -95,7 +94,7 @@ public class FrontController extends HttpServlet {
 			String productOption = request.getParameter("productOption");
 			
 			System.out.println(qty +", "+ productNo + ", " + productOption);
-
+			//payment 페이지 구현 전
 			request.getRequestDispatcher("payment.jsp").forward(request, response);
 		}
 		
@@ -104,9 +103,9 @@ public class FrontController extends HttpServlet {
 			
 			String productNo = request.getParameter("productNo");
 			String productOption = request.getParameter("productOption");
-			
+
 			System.out.println(qty +", "+ productNo + ", " + productOption);
-		
+			
 			request.getRequestDispatcher("controller?type=productdetail&productno="+productNo).forward(request, response);
 		}
 		
@@ -116,7 +115,7 @@ public class FrontController extends HttpServlet {
 			
 			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
-		
+
 	}
 	
 	@Override
