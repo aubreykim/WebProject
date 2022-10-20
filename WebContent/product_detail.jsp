@@ -95,7 +95,7 @@
 <div class="container align-content-center">
 	<div>
 	<!-- <jsp:include page="include/header.jsp"/> --> 
-	<%@ include file="include/header.jspf" %>
+	<%@ include file="include/header.jsp" %>
 	<div class="float-left w-40" style="height:  600px;">
 		<img src="img/${productVO.thumnail }" alt="img/${productVO.thumnail }" width="auto" height="90%">
 	</div>
