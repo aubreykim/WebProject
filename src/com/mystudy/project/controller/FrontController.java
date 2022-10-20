@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mystudy.project.common.Paging;
 import com.mystudy.project.dao.DAO;
 import com.mystudy.project.vo.ProductVO;
+import com.mystudy.project.vo.ReviewVO;
 import com.mystudy.project.vo.SizeVO;
 
 
@@ -21,7 +22,8 @@ public class FrontController extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		response.setContentType("text/html; charset=UTF-8");
+		
 		String type = request.getParameter("type");
 
 		System.out.println(type);
@@ -70,12 +72,19 @@ public class FrontController extends HttpServlet {
 		if (type.equals("productdetail")) {
 			
 			String productNo = request.getParameter("productno");
-			ProductVO vo = DAO.getProductInfo(productNo);
-			List<SizeVO> list = DAO.getOptionList(productNo);
-			System.out.println(list);
-			request.setAttribute("productVO", vo);
-			request.setAttribute("SizeList", list);
 			
+			ProductVO vo = DAO.getProductInfo(productNo);
+			List<SizeVO> sizeList = DAO.getOptionList(productNo);
+			
+			request.setAttribute("productVO", vo);
+			
+			request.setAttribute("SizeList", sizeList);
+			
+
+			List<ReviewVO> reviewList = DAO.getProductReview(Integer.valueOf(productNo), 1, 3);
+			System.out.println(reviewList);
+			request.setAttribute("reviewList", reviewList);
+
 			request.getRequestDispatcher("product_detail.jsp").forward(request, response);
 		}
 		

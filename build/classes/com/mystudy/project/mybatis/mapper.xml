@@ -58,4 +58,16 @@
 	WHERE PRODUCT_NO = #{productNo}
 </select>
 
+
+<select id="selectReview" parameterType = "map" resultType="com.mystudy.project.vo.ReviewVO">
+	SELECT *
+	FROM ( SELECT ROWNUM R_NUM, R.*
+	       FROM (SELECT * FROM REVIEW 
+	       		WHERE PRODUCT_NO = #{productNo} 
+	       		ORDER BY REVIEW_NO DESC
+	       		) R
+	     )
+	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
 </mapper>

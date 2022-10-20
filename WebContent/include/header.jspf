@@ -11,42 +11,48 @@
 		<li class="nav-item">
 			<a class="nav-link text-body" href="controller?type=cart">cart</a>
 		</li>
+		<li class="nav-item"> 
+			<a class = "nav-link" href=""><i>search</i></a>
+		</li>
 	</ul>
 </div>
 <p class="clear"></p>
+<p class="py-2"></p>
 <div id="header">
-	<div class="text-center">
-		<image src="https://mellood.com/web/upload/img/logo.jpg" alt="logo" width="100px" }>
+<div class="text-center">
+	<image src="https://mellood.com/web/upload/img/logo.jpg" alt="logo" width="100px" }>
+</div>
+<p class="py-2"></p>
+	
+<div>
+	<div class="container">
+	  <ul class="nav justify-content-center">
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=BESTITEM">BEST ITEM</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=NEW">NEW</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=OUTER">OUTER</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=TOP">TOP</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=BOTTOM">BOTTOM</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=SHOESBAG">SHOES & BAG</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=productlist&category=ACC">ACC</a>
+	    </li>
+	    <li class="nav-item">
+	      <a class="nav-link text-body" href="controller?type=COMMUNITY">COMMUNITY</a>
+	    </li>
+	  </ul>
 	</div>
-	<div>
-		<div class="container">
-		  <ul class="nav justify-content-center">
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=BESTITEM">BEST ITEM</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=NEW">NEW</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=OUTER">OUTER</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=TOP">TOP</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=BOTTOM">BOTTOM</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=SHOESBAG">SHOES & BAG</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=productlist&category=ACC">ACC</a>
-		    </li>
-		    <li class="nav-item">
-		      <a class="nav-link text-body" href="controller?type=COMMUNITY">COMMUNITY</a>
-		    </li>
-		  </ul>
-		</div>
-	</div>
+</div>
 <p class="clear"></p>
 </div>

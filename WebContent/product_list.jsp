@@ -49,8 +49,9 @@
 	<%@ include file="include/header.jspf" %>
 	
 	<div class="text-center">
+		<p class="py-3"></p>
 		<h2 class="text-center">${category }</h2>
-		
+		<p class="py-3"></p>
 	</div>
 	
 	<div>
@@ -72,7 +73,9 @@
 	<div id="productList" style="width:100%; height: auto;">
 		
 		<c:if test="${empty productList }">
+			<p class="py-5"></p>
 			<h3 class="text-center">해당 카테고리에 현재 판매중인 상품이 없습니다</h3>
+			<p class="py-3"></p>
 		</c:if>
 
 		<ul class="nav" style="width:100%;">

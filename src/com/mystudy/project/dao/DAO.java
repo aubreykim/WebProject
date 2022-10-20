@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.mystudy.project.mybatis.DBService;
 import com.mystudy.project.vo.ProductVO;
+import com.mystudy.project.vo.ReviewVO;
 import com.mystudy.project.vo.SizeVO;
 
 public class DAO {
@@ -71,6 +72,18 @@ public class DAO {
 	public static List<SizeVO> getOptionList (String productNo) {
 		SqlSession ss = DBService.getFactory().openSession(true);
 		List<SizeVO> list = ss.selectList("project.selectProductOption", productNo);
+		return list;
+	}
+	
+	public static List<ReviewVO> getProductReview (int productNo, int begin, int end) {
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("productNo", productNo);
+		map.put("begin", begin);
+		map.put("end", end);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		List<ReviewVO> list = ss.selectList("project.selectReview", map);
 		return list;
 	}
 

@@ -1,3 +1,6 @@
+<%@page import="com.mystudy.project.vo.ReviewVO"%>
+<%@page import="java.util.List"%>
+<%@page import="com.mystudy.project.dao.DAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -19,7 +22,16 @@
   }
 </style>
 <script>
-
+	$(function(){
+		$("#ReviewPagingButton").click(PagingReview);
+		
+	});
+	
+	function PagingReview () {
+		alert("paging 연결해야 함");
+	}
+	
+	
 	function select_opt(button) {
 		$(function(){
 			alert("클릭됨");
@@ -94,6 +106,7 @@
 <div class="container align-content-center">
 
 	<%@ include file="include/header.jspf" %>
+	<p class="py-3"></p>
 
 	<div id="productsummary" class="p-3 border float-left" style="width:100%">
 
@@ -179,8 +192,10 @@
 		</div> <!-- productselect div end -->
 		
 	</div> <!-- summary div end -->
-	
 	<p class="clearfix">
+	
+	<p class="py-5"></p>
+	
 	<%@ include file="include/detailnav.jspf" %>
 	<p class="float-none">
 	<div class="text-center">
@@ -189,6 +204,7 @@
 		${productVO.content }
 		</pre>
 	</div>
+	<p class="py-5"></p>
 	<%@ include file="include/detailnav.jspf" %>
 	<p class="clear"></p>
 	<div class="text-center">
@@ -196,9 +212,19 @@
 			<%@ include file="include/shippinginfo_detail.jspf" %>
 		</pre>
 	</div>
+	<p class="py-5"></p>
+	
 	<%@ include file="include/detailnav.jspf" %>
+	
 	<div id="menu3">
-		 <table class="table">
+		 <table class="table text-center" style="width:100%">
+		 	<colgroup>
+				<col style="width: 5%;">
+				<col style="width: 40%;">
+				<col style="width: 5%;">
+				<col style="width: 10%;">
+				<col style="width: 5%;">
+		 	</colgroup>
 		 	<caption class="d-none">상품리뷰</caption>
 		 	<thead class="thead-light">
 		 		<tr>
@@ -209,23 +235,40 @@
 		 			<th>조회</th>
 		 		</tr>
 		 	</thead>
-		 	<tbody>
-	 	 			<td>1</td>
-	 	 			<td>테스트</td>
-	 	 			<td>테스터</td>
-	 	 			<td>2022-10-17</td>
-	 	 			<td>0</td>
+		 	<tbody id="ProductReview">
+		 		<c:forEach var="reviewVO" items="${reviewList }">
+			 		<tr>
+		 	 			<td>${reviewVO.reviewNo }</td>
+		 	 			<td>${reviewVO.title }</td>
+		 	 			<td>${reviewVO.userName }</td>
+		 	 			<td>${reviewVO.wdate.substring(0, 10) }</td>
+		 	 			<td>${reviewVO.hit}</td>
+		 	 		</tr>
+		 		</c:forEach>
 		 	</tbody>
 		 </table>
 		 <div class="text-right">
 		 	<button class="btn btn-outline-light text-dark">상품리뷰쓰기</button>
 		 	<button class="btn btn-outline-light text-dark">모두보기</button>
 		 </div>
+		 <div>
+		 	<%@ include file="include/pagingReview.jspf" %>
+		 </div>
 	</div>
+	<p class="py-5"></p>
+	
 	<%@ include file="include/detailnav.jspf" %>
+
 	<div id="menu4">
-	 	<table class="table">
+	 	<table class="table text-center">
 	 	<caption class="d-none">상품Q&A</caption>
+	 	<colgroup>
+			<col style="width: 5%;">
+			<col style="width: 40%;">
+			<col style="width: 5%;">
+			<col style="width: 10%;">
+			<col style="width: 5%;">
+	 	</colgroup>
 	 	<thead class="thead-light">
 	 		<tr>
 	 			<th>번호</th>
@@ -236,11 +279,13 @@
 	 		</tr>
 	 	</thead>
 	 	<tbody>
- 	 			<td>1</td>
- 	 			<td>테스트</td>
- 	 			<td>테스터</td>
- 	 			<td>2022-10-17</td>
- 	 			<td>0</td>
+ 			<tr>
+	 			<td>1</td>
+	 			<td>테스트</td>
+	 			<td>테스터</td>
+	 			<td>2022-10-17</td>
+	 			<td>0</td>
+	 		</tr>
 	 	</tbody>
 	 </table>
 		<div class="text-right">
@@ -248,7 +293,7 @@
 			<button class="btn btn-outline-light text-dark">모두보기</button>
 		</div>
 	</div>
-	
+	<p class="py-5"></p>
 </div>
 </body>
 <footer>
