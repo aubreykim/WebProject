@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<div id="headermenu">
+	<ul class="nav justify-content-end">
+		<li class="nav-item">
+			<a class="nav-link" href="controller?type=login">login</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="controller?type=join">join</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="controller?type=cart">cart</a>
+		</li>
+	</ul>
+</div>
+<p class="clear"></p>
+<div id="header">
+	<div class="text-center">
+		<image src="https://cdn.oioicollection.com/img/logo/oirelogo_b.png" alt="logo">
+	</div>
+	<div>
+		<div class="container">
+		  <ul class="nav justify-content-center">
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=BESTITEM">BEST ITEM</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=NEW">NEW</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=OUTER">OUTER</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=TOP">TOP</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=BOTTOM">BOTTOM</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=SHOESBAG">SHOES & BAG</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=productlist&category=ACC">ACC</a>
+		    </li>
+		    <li class="nav-item">
+		      <a class="nav-link" href="controller?type=COMMUNITY">COMMUNITY</a>
+		    </li>
+		  </ul>
+		</div>
+	</div>
+<p class="clear"></p>
+</div>
