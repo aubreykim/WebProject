@@ -25,24 +25,21 @@
 			alert("클릭됨");
 			
 			let htmlTag = "";
+
+			htmlTag += "<tr>";
+			htmlTag += "<td>${productVO.productName }/";
+			htmlTag += button.value;
+			htmlTag += "</td>";
 			
-			htmlTag += "<tr>";
-			htmlTag += "<td>${productVO.productName }/</td>";
-			htmlTag += "<td>"+button.value+"</td>";
-			htmlTag += "<td class='float-left'>";
-			htmlTag += "<tr>";
 			htmlTag += "<td>";
 			htmlTag += "<input type='button' onclick='qty_minus(this.form)' value='-'>";
 			htmlTag += "<input type='text' name='qty' size='1' value='1'>";
 			htmlTag += "<input type='button' onclick='qty_plus(this.form)' value='+'>";
 			htmlTag += "<input type='button' onclick='qty_delete(this.form)' value='x'>";
-			htmlTag += "<input type='hidden' name='productNo' value='${productVO.productNo}'>";
-			htmlTag += "<input type='hidden' name='productOption' value="+button.value+">";
 			htmlTag += "</td>";
+			
 			htmlTag += "<td>";
-			htmlTag += "<div>";
 			htmlTag += "<span><strong>${productVO.price }</strong></span>";
-			htmlTag += "</div>";
 			htmlTag += "</td>";
 			htmlTag += "</tr>";
 			
@@ -72,94 +69,117 @@
 	
 	function go_pay(frm) {
 		alert("결제 페이지로 이동");
-		frm.action = "controller?type=pay";
+		frm.type.value = "pay";
+		frm.action = "controller";
 		frm.submit();
 	}
 	
 	function add_cart(frm) {
 		alert("장바구니에 추가되었습니다");
-		frm.action = "controller?type=addCart";
+		frm.type.value = "addCart";
+		frm.action = "controller";
 		frm.submit();
 	}
 	
 	function add_like(frm) {
 		alert("관심 목록에 추가되었습니다");
-		frm.action = "controller?type=addLike";
+		frm.type.value = "addLike";
+		frm.action = "controller";
 		frm.submit();
 	}
 	
 </script>
 </head>
 <body>
-<div class="container-fluid align-content-center">
-	<!-- <jsp:include page="include/header.jsp"/> --> 
+<div class="container align-content-center">
+
 	<%@ include file="include/header.jspf" %>
-	<div class="float-left w-40" style="height:  600px;">
-		<img src="img/${productVO.thumnail }" alt="img/${productVO.thumnail }" width="auto" height="90%">
-	</div>
-	<div class="p-5 float-left w-50" style="">
-		<div>
-			<table>
+
+	<div id="productsummary" class="p-3 border float-left" style="width:100%">
+
+		<div id="productimg" class="border text-center float-left" style="width:50%;">
+			<img src="img/${productVO.thumnail }" alt="${productVO.thumnail }" width=80%;>
+		</div>
+		
+		<div id="productselect" class="p-5 border float-left" style="width:50%;">
+			<div id="productinfo">
+				<table style="width:100%;">
+					<colgroup>
+						<col style="width: 30%;">
+					</colgroup>
+					<tr>
+						<th>상품명</th>
+						<td>${productVO.productName }</td>
+					<tr>
+						<th>판매가</th>
+						<td>${productVO.price }원</td>
+					</tr>
+					<tr>
+						<th>배송비</th>
+						<td>3,000원 (70,000원 이상 구매 시 무료)</td>
+					</tr>
+				</table>				
+				<hr>
+				<table style="width:100%;">
 				<colgroup>
-					<col style="width: 25%;">
+					<col style="width: 30%;">
 				</colgroup>
-				<tr>
-					<th>상품명</th>
-					<td>${productVO.productName }</td>
-				<tr>
-					<th>판매가</th>
-					<td>${productVO.price }원</td>
-				</tr>
-				<tr>
-					<th>배송비</th>
-					<td>3,000원 (70,000원 이상 구매 시 무료)</td>
-				</tr>
-				<tr>
-					<th>Option</th>
-					<td>
-						<c:forEach var="size" items="${SizeList }">
-							<input type="button" class="btn btn-outline-light text-dark" onclick="select_opt(this)" value="${size.optionSize }">
-						</c:forEach>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<hr>
-		<div>
-		<span>(최소주문수량 1개 이상)</span>
-		</div>
-		<hr>
-		<div>
+					<tr>
+						<th>Option</th>
+						<td>
+							<c:forEach var="size" items="${SizeList }">
+								<input type="button" class="btn btn-outline-light text-dark" onclick="select_opt(this)" value="${size.optionSize }">
+							</c:forEach>
+						</td>
+					</tr>
+				</table>
+				<hr>
+			</div>
+			
+			<div>
+			<span>(최소주문수량 1개 이상)</span>
+			</div>
+			<br>
 			<p>위 옵션선택 박스를 선택하시면 아래에 상품이 추가됩니다.</p>
 			<hr>
-			<hr>
-			<div>
+			
+			<div id="productfrm">
 				<form>
-					<table>
+					<table style="widht: 100%">
 						<colgroup>
-						<col style="width: 30%;">
-						<col style="width: 10%;">
+						<col style="width: 50%;">
 						<col style="width: 40%;">
 						</colgroup>
+						
 						<tr class="d-none">
 							<th>상품명</th>
 							<th>수량</th>
 							<th>가격</th>
 						</tr>
-						<div  id="optionList">
-						</div>
+						<tr>
+						<td colspan="3">
+						<input type='hidden' name='productNo' value='${productVO.productNo}'>
+						<input type='hidden' name='productOption' value='button.value'>
+						<input type='hidden' name='type' value='type'>
+						</td>
+						</tr>
+						<tbody id="optionList">
+						
+						</tbody>
 					</table>
-				<hr>
-				<hr>
-				<div>
-					<button class="btn btn-outline-light text-dark" onclick="go_pay(this.form)">바로구매</button>
-					<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>
-					<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
-				</div>
-				</form>
+					<hr>
+					<div>
+						<button class="btn btn-outline-light text-dark" onclick="go_pay(this.form)">바로구매</button>
+						<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>
+						<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
+					</div>
+				</form>				
 			</div>
-		</div>
-	</div>
+			
+		</div> <!-- productselect div end -->
+		
+	</div> <!-- summary div end -->
+	
 	<p class="clearfix">
 	<%@ include file="include/detailnav.jspf" %>
 	<p class="float-none">
@@ -170,7 +190,7 @@
 		</pre>
 	</div>
 	<%@ include file="include/detailnav.jspf" %>
-	<p class="clear">
+	<p class="clear"></p>
 	<div class="text-center">
 		<pre>
 			<%@ include file="include/shippinginfo_detail.jspf" %>
@@ -228,6 +248,7 @@
 			<button class="btn btn-outline-light text-dark">모두보기</button>
 		</div>
 	</div>
+	
 </div>
 </body>
 <footer>

@@ -23,6 +23,8 @@ public class FrontController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String type = request.getParameter("type");
+
+		System.out.println(type);
 		
 		if (type.equals("productlist")) {
 			
@@ -75,6 +77,35 @@ public class FrontController extends HttpServlet {
 			request.setAttribute("SizeList", list);
 			
 			request.getRequestDispatcher("product_detail.jsp").forward(request, response);
+		}
+		
+		if (type.equals("pay")) {
+			int qty = Integer.valueOf(request.getParameter("qty"));
+			
+			String productNo = request.getParameter("productNo");
+			String productOption = request.getParameter("productOption");
+			
+			System.out.println(qty +", "+ productNo + ", " + productOption);
+
+			request.getRequestDispatcher("payment.jsp").forward(request, response);
+		}
+		
+		if (type.equals("addCart")) {
+			int qty = Integer.valueOf(request.getParameter("qty"));
+			
+			String productNo = request.getParameter("productNo");
+			String productOption = request.getParameter("productOption");
+			
+			System.out.println(qty +", "+ productNo + ", " + productOption);
+		
+			request.getRequestDispatcher("controller?type=productdetail&productno="+productNo).forward(request, response);
+		}
+		
+		if (type.equals("addLike")) {
+			
+			String productNo = request.getParameter("productNo");
+			
+			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
 		
 	}

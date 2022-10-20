@@ -39,49 +39,67 @@
 		location.href="controller?type=productlist&category=${category }&order=name";
 	}
 	
+	
 </script>
 </head>
 <body>
-<div class="container-fluid align-content-center">
-	<!-- <jsp:include page="include/header.jsp"/> -->
+
+<div class="container">
+
 	<%@ include file="include/header.jspf" %>
-	<div>
+	
+	<div class="text-center">
 		<h2 class="text-center">${category }</h2>
-		<div class="container">
-		  <ul class="nav justify-content-end">
-		    <li class="nav-item">
-		      <input type="button" id="orderByNew" value="최신등록순">
-		    </li>
-		    <li class="nav-item">
-		      <input type="button" id="orderByName" value="제품명">
-		    </li>
-		    <li class="nav-item">
-		      <input type="button" id="orderByPrice" value="가격순">
-		    </li>
-		  </ul>
-		</div>
+		
 	</div>
-	<p class="clearfix"></p>
-	<div id="productList" class="w-100 p-3">
-		<c:if test="${empty productList }">
-			<h3>해당 카테고리에 현재 판매중인 상품이 없습니다</h3>
-		</c:if>
-		<c:forEach var="productVO" items="${productList }">
-			<div class="float-left" style="width: 25%;">
-				<div>
-				<a href="controller?type=productdetail&productno=${productVO.productNo }">
-					<img src="img/${productVO.thumnail }" alt="img" width="95%" height="500">
-				</a>
-				</div>
-				<div class="product_title">${productVO.productName }</div>
-				<div class="product_price">${productVO.price }</div>
-			</div>
-		</c:forEach>
+	
+	<div>
+	  <ul class="nav justify-content-end">
+	    <li class="nav-item">
+	      <input type="button" id="orderByNew" value="최신등록순">
+	    </li>
+	    <li class="nav-item">
+	      <input type="button" id="orderByName" value="제품명">
+	    </li>
+	    <li class="nav-item">
+	      <input type="button" id="orderByPrice" value="가격순">
+	    </li>
+	  </ul>
 	</div>
 	
 	<p class="clearfix"></p>
+
+	<div id="productList" style="width:100%; height: auto;">
+		
+		<c:if test="${empty productList }">
+			<h3 class="text-center">해당 카테고리에 현재 판매중인 상품이 없습니다</h3>
+		</c:if>
+
+		<ul class="nav" style="width:100%;">
+		<c:forEach var="productVO" items="${productList }">
+			<li class="nav-item float-left text-center border p-1" style="width: 33%;">
+				<div>
+					<a href="controller?type=productdetail&productno=${productVO.productNo }">
+					<img src="img/${productVO.thumnail }" alt="img" width="95%" height="400">
+					</a>
+				</div>
+				<div class="product_title">${productVO.productName }</div>
+				<div class="product_price">${productVO.price }</div>
+			</li>
+		</c:forEach>
+		</ul>
+
+	<p class="clearfix"></p>
+
+	</div>
+
+
+
+	<p class="clearfix"></p>
 	<%@ include file="include/paging.jspf" %>
+	
 </div>
+
 <footer>
 	<%@ include file="include/footer.jspf" %>
 </footer>

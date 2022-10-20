@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<style>
+	#menu1 ul li { font-size: 0.8em; }
+</style>
 <div id="menu1">
 	<ul class="nav justify-content-center">
-		<li class="nav-item"><a href="#menu1" class="nav-link">상품상세정보</a></li>
-		<li class="nav-item"><a href="#menu2" class="nav-link">상품구매안내</a></li>
-		<li class="nav-item"><a href="#menu3" class="nav-link">상품사용후기(2)</a></li>
-		<li class="nav-item"><a href="#menu4" class="nav-link">상품Q&A</a></li>
-		<li class="nav-item"><a href="#menu5" class="nav-link">관련상품</a></li>
+		<li class="nav-item"><a href="#menu1" class="nav-link text-muted">상품상세정보</a></li>
+		<li class="nav-item"><a href="#menu2" class="nav-link text-muted">상품구매안내</a></li>
+		<li class="nav-item"><a href="#menu3" class="nav-link text-muted">상품사용후기(2)</a></li>
+		<li class="nav-item"><a href="#menu4" class="nav-link text-muted">상품Q&A</a></li>
+		<li class="nav-item"><a href="#menu5" class="nav-link text-muted">관련상품</a></li>
 	</ul>
 </div>
