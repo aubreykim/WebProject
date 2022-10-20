@@ -42,7 +42,7 @@
 </script>
 </head>
 <body>
-<div class="container align-content-center">
+<div class="container-fluid align-content-center">
 	<!-- <jsp:include page="include/header.jsp"/> -->
 	<%@ include file="include/header.jspf" %>
 	<div>
@@ -67,10 +67,10 @@
 			<h3>해당 카테고리에 현재 판매중인 상품이 없습니다</h3>
 		</c:if>
 		<c:forEach var="productVO" items="${productList }">
-			<div class="float-left" style="width: 33%;">
+			<div class="float-left" style="width: 25%;">
 				<div>
 				<a href="controller?type=productdetail&productno=${productVO.productNo }">
-					<img src="img/${productVO.thumnail }" alt="img" width="90%" height="350px">
+					<img src="img/${productVO.thumnail }" alt="img" width="95%" height="500">
 				</a>
 				</div>
 				<div class="product_title">${productVO.productName }</div>
