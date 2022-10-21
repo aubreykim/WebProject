@@ -66,7 +66,7 @@ public class DAO {
 	
 	public static ProductVO getProductInfo (String productNo) {
 		SqlSession ss = DBService.getFactory().openSession(true);
-		ProductVO vo = ss.selectOne("project.selectProjectVO", productNo);
+		ProductVO vo = ss.selectOne("project.selectProductVO", productNo);
 		return vo;
 	}
 	
@@ -88,5 +88,43 @@ public class DAO {
 		return list;
 	}
 	
+	
+	public static int insertCart(String optionNo, String userId, String qty) {
+		
+		Map<String, String> map = new HashMap<>();
+		map.put("optionNo", optionNo);
+		map.put("userId", userId);
+		map.put("qty", qty);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		
+		return ss.insert("project.insertCart", map);
+	}
 
+	public static String getOptionNo (String productNo, String productOption) {
+		
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("productNo", productNo);
+		map.put("productOption", productOption);
+		
+		System.out.println(map.keySet());
+		System.out.println(map.values());
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		String optionNo = ss.selectOne("project.selectOptionNo", map);
+		
+		System.out.println("optionNo: " + optionNo);
+		return optionNo;
+	}
+	
+	public static int addLike (String productNo, String userId) {
+		Map<String, String> map = new HashMap<>();
+		map.put("productNo", productNo);
+		map.put("userId", userId);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		return ss.insert("project.inserLikeProduct", map);
+	}
+	
 }

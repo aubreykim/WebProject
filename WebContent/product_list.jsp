@@ -1,3 +1,4 @@
+<%@page import="java.io.File"%>
 <%@page import="com.mystudy.project.vo.ProductVO"%>
 <%@page import="java.util.List"%>
 <%@page import="com.mystudy.project.dao.DAO"%>
@@ -18,6 +19,8 @@
  #footer { font-size: 0.8em; }
 </style>
 <script>
+	
+	
 	$(function(){
 		$("#orderByNew").click(orderByNew);
 		$("#orderByName").click(orderByName);
@@ -83,7 +86,7 @@
 			<li class="nav-item float-left text-center border p-1" style="width: 33%;">
 				<div>
 					<a href="controller?type=productdetail&productno=${productVO.productNo }">
-					<img src="img/${productVO.thumnail }" alt="img" width="95%" height="400">
+					<img src="./img/${productVO.thumnail }" alt="img" width="95%" height="400">
 					</a>
 				</div>
 				<div class="product_title">${productVO.productName }</div>
@@ -99,6 +102,13 @@
 
 
 	<p class="clearfix"></p>
+	<%
+		File f = new File("C:/MyStudy/60_web/Project/WebContent/include/paging.jspf");
+		System.out.println(f.getAbsolutePath());
+		String file = f.getAbsolutePath();
+		request.setAttribute("file", file);
+		//절대 경로 삽입법 다시 공부
+	%>
 	<%@ include file="include/paging.jspf" %>
 	
 </div>

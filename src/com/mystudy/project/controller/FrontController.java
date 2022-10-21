@@ -31,7 +31,6 @@ public class FrontController extends HttpServlet {
 		
 		if (type.equals("productlist")) {
 			
-			
 			String category = request.getParameter("category");
 			String categoryNo = DAO.getCategoryNo(category);
 			String order = request.getParameter("order");
@@ -71,7 +70,7 @@ public class FrontController extends HttpServlet {
 		if (type.equals("productdetail")) {
 			
 			String productNo = request.getParameter("productno");
-			
+			System.out.println("productNo" + productNo);
 			ProductVO vo = DAO.getProductInfo(productNo);
 			List<SizeVO> sizeList = DAO.getOptionList(productNo);
 			
@@ -88,31 +87,63 @@ public class FrontController extends HttpServlet {
 		}
 		
 		if (type.equals("pay")) {
-			int qty = Integer.valueOf(request.getParameter("qty"));
-			
+
+			List<CartVO> list = new ArrayList<CartVO>();
+
 			String productNo = request.getParameter("productNo");
 			String productOption = request.getParameter("productOption");
 			
-			System.out.println(qty +", "+ productNo + ", " + productOption);
+			System.out.println("productNo: " + productNo);
+			System.out.println("productOption: " + productOption);
+			
+			String optionNo = DAO.getOptionNo(productNo, productOption);
+
+			String qty = request.getParameter("qty");
+			
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+			// session 연결된 아이디 긁어다 쓰면 되니까 전달 안 해 줘도 될 것 같음
+			
+			
+			CartVO vo = new CartVO("1", optionNo, userId, Integer.valueOf(qty));
+			//System.out.println("vo: "+ vo.getQty());
+			
+			list.add(vo);
+			
+			request.setAttribute("list", list);
+			//단일 상품 결제를 위한 List<CartVO> list 전달 (옵션은 여러개일 수 있음)
+			
 			//payment 페이지 구현 전
 			request.getRequestDispatcher("payment.jsp").forward(request, response);
+			
 		}
 		
 		if (type.equals("addCart")) {
-			int qty = Integer.valueOf(request.getParameter("qty"));
 			
 			String productNo = request.getParameter("productNo");
 			String productOption = request.getParameter("productOption");
-
-			System.out.println(qty +", "+ productNo + ", " + productOption);
+			String qty = request.getParameter("qty");
 			
-			request.getRequestDispatcher("controller?type=productdetail&productno="+productNo).forward(request, response);
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+
+			String optionNo = DAO.getOptionNo(productNo, productOption);
+			System.out.println("optionNo: " + optionNo);
+			
+			DAO.insertCart(optionNo, userId, qty);
+
+			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
+		
 		
 		if (type.equals("addLike")) {
 			
 			String productNo = request.getParameter("productNo");
-			
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+
+			DAO.addLike(productNo, userId);
+
 			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
 

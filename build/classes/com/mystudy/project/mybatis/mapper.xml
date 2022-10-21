@@ -45,7 +45,7 @@
 </select>
 
 
-<select id="selectProjectVO" parameterType="string" resultType="com.mystudy.project.vo.ProductVO">
+<select id="selectProductVO" parameterType="string" resultType="com.mystudy.project.vo.ProductVO">
 	SELECT *
 	FROM PRODUCT
 	WHERE PRODUCT_NO = #{productNo}
@@ -69,5 +69,27 @@
 	     )
 	WHERE R_NUM BETWEEN #{begin} AND #{end}
 </select>
+
+
+
+<select id="selectOptionNo" parameterType="map" resultType="string">
+	SELECT OPTION_NO
+	FROM PRODUCT_OPTION
+	WHERE PRODUCT_NO = #{productNo}
+	AND OPTION_SIZE = #{productOption}
+</select>
+
+<insert id="insertCart" parameterType="map">
+	INSERT INTO CART
+        	(CART_NO, OPTION_NO, USER_ID, QTY)
+	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{qty})
+</insert>
+
+<insert id="inserLikeProduct" parameterType="map">
+	INSERT INTO LIKE_PRODUCT
+        	(LIKE_NO, PRODUCT_NO, USER_ID, LDATE)
+	VALUES (LIKE_NO_SEQ.NEXTVAL, #{productNo}, #{userId}, SYSDATE)
+</insert>
+
 
 </mapper>

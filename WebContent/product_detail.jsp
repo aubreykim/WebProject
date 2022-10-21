@@ -23,79 +23,82 @@
   }
 </style>
 <script>
+	
 	$(function(){
-		$("#ReviewPagingButton").click(PagingReview);
+		
+		//기본으로 안 보여 주기		
+		$(".optiontbd").hide();
+		
+		$(".calTotalPrice").change(fnComputeOption);
 		
 	});
+	
+	function fnComputeOption () {
+		let totalPrice = 0;
+		$(".eachPrice").each(function(){
+			totalPrice += parseInt($(this).val());
+			$("#totalPrice").text(totalPrice);
+		});
+	}
 	
 	function PagingReview () {
 		alert("paging 연결해야 함");
 	}
 	
-	
-	function select_opt(button) {
+	function select_opt(num) {
 		$(function(){
-			alert("클릭됨");
-			
-			let htmlTag = "";
+			$("#opt"+num).show();		
+		});
+	}
+	
+	function qty_delete(qtyid) {
+		alert("선택이 취소됩니다");
 
-			htmlTag += "<tr>";
-			htmlTag += "<td>${productVO.productName }/";
-			htmlTag += button.value;
-			htmlTag += "</td>";
-			
-			htmlTag += "<td>";
-			htmlTag += "<input type='button' onclick='qty_minus(this.form)' value='-'>";
-			htmlTag += "<input type='text' name='qty' size='1' value='1'>";
-			htmlTag += "<input type='button' onclick='qty_plus(this.form)' value='+'>";
-			htmlTag += "<input type='button' onclick='qty_delete(this.form)' value='x'>";
-			htmlTag += "</td>";
-			
-			htmlTag += "<td>";
-			htmlTag += "<span><strong>${productVO.price }</strong></span>";
-			htmlTag += "</td>";
-			htmlTag += "</tr>";
-			
-			$("#optionList").after(htmlTag);
-		});
+		$("#qty"+qtyid).val(0);
+		$("#price"+qtyid).val(0);
+		$("#opt"+qtyid).hide();
+
+	}
+	
+	function calPrice(qtyid){
+		
+		let originalPrice = parseInt($("#originalprice"+qtyid).val());
+		
+		let qty = parseInt($("#qty"+qtyid).val());
+
+		$("#price"+qtyid).val(originalPrice*qty);
 		
 	}
-	
-	function qty_minus(frm) {
-		let qty = parseInt(frm.qty.value);
-		if (qty > 1) {
-			frm.qty.value = qty - 1;
-		}
-	}
-	
-	function qty_plus(frm) {
-		let qty = parseInt(frm.qty.value);
-		frm.qty.value = qty + 1;
-	}
-	
-	function qty_delete(frm) {
-		$(function(){
-			alert("취소됨");
-		});
-		
-	}
-	
+
 	function go_pay(frm) {
-		alert("결제 페이지로 이동");
+		/* form으로 list를 전달해야 함 - cart, list 모두 */
+		/* 전달하고 받아야 하는 데이터 type(pay, cart), productNo(제품번호), productOption(사이즈문자열) qty(수량)*/
+		
+		/*
+			대충 이런 루트로
+			let list = new Array();
+			list.pust(cartVo);
+		*/
+		
 		frm.type.value = "pay";
+		
+		alert("결제 페이지로 이동합니다");
+		
 		frm.action = "controller";
 		frm.submit();
 	}
 	
-	function add_cart(frm) {
-		alert("장바구니에 추가되었습니다");
+	function add_cart(frm) {		
 		frm.type.value = "addCart";
+		alert("장바구니에 추가되었습니다!!");
 		frm.action = "controller";
 		frm.submit();
 	}
 	
 	function add_like(frm) {
+		
 		alert("관심 목록에 추가되었습니다");
+		
 		frm.type.value = "addLike";
 		frm.action = "controller";
 		frm.submit();
@@ -142,7 +145,7 @@
 						<th>Option</th>
 						<td>
 							<c:forEach var="size" items="${SizeList }">
-								<input type="button" class="btn btn-outline-light text-dark" onclick="select_opt(this)" value="${size.optionSize }">
+								<input type="button" class="btn btn-outline-light text-dark" onclick="select_opt(${size.optionNo})" value="${size.optionSize }">
 							</c:forEach>
 						</td>
 					</tr>
@@ -170,21 +173,45 @@
 							<th>수량</th>
 							<th>가격</th>
 						</tr>
+						<c:forEach var="size" items="${SizeList }">
+							<tbody class="optiontbd" id="opt${size.optionNo }">
+								<tr>
+									<td> ${productVO.productName } ${size.optionSize }</td>
+									<td>
+										<input type="number" id="qty${size.optionNo }" name="qty" style="width: 60px" min="0" max="${size.optionCount }" value="0"
+											onchange="calPrice(${size.optionNo })" class="calTotalPrice">
+										<input type="button" onclick="qty_delete(${size.optionNo })" value="x">				
+									</td>
+									<td>
+										<input type="text" id="price${size.optionNo }" name="eachPrice" value="0" size="3" class="eachPrice" readonly/>
+										<input type="hidden" id="originalprice${size.optionNo }" name="originPrice" value="${productVO.price }" size="3" disable/>
+										<input type='hidden' id="size${size.optionNo }"" name='productOption' value='${size.optionSize }'>
+									</td>
+								</tr>
+							</tbody>
+						</c:forEach>
 						<tr>
-						<td colspan="3">
-						<input type='hidden' name='productNo' value='${productVO.productNo}'>
-						<input type='hidden' name='productOption' value='button.value'>
-						<input type='hidden' name='type' value='type'>
-						</td>
+							<td>
+								totalPrice
+							</td>
+							<td id="totalPrice" colspan="2">
+								0
+							</td>
 						</tr>
-						<tbody id="optionList">
-						
-						</tbody>
+						<tr>
+							<td colspan="3">
+							<input type='hidden' name='productNo' value='${productVO.productNo}'>
+							<input type='hidden' name='type' value='type'>
+							</td>
+						</tr>
 					</table>
 					<hr>
 					<div>
 						<button class="btn btn-outline-light text-dark" onclick="go_pay(this.form)">바로구매</button>
+						
 						<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>
+						
+						<!-- 관심상품 등록 및 해제 페이지 이동 없이 처리 가능한지 추후 구현 -->
 						<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
 					</div>
 				</form>				

@@ -2,8 +2,9 @@ package com.mystudy.project.vo;
 
 public class CartVO {
 	
-	String productNo;
-	String productOption;
+	String cartNo;
+	String optionNo;
+	String userId;
 	int qty;
 	
 	
@@ -12,31 +13,48 @@ public class CartVO {
 		super();
 	}
 
-	public CartVO(String productNo, String productOption, int qty) {
+	public CartVO(String cartNo, String optionNo, String userId, int qty) {
 		super();
-		this.productNo = productNo;
-		this.productOption = productOption;
+		this.cartNo = cartNo;
+		this.optionNo = optionNo;
+		this.userId = userId;
 		this.qty = qty;
 	}
+
 	
-	public String getProductNo() {
-		return productNo;
+	public String getCartNo() {
+		return cartNo;
 	}
-	public void setProductNo(String productNo) {
-		this.productNo = productNo;
+
+	public void setCartNo(String cartNo) {
+		this.cartNo = cartNo;
 	}
-	public String getProductOption() {
-		return productOption;
+
+	public String getOptionNo() {
+		return optionNo;
 	}
-	public void setProductOption(String productOption) {
-		this.productOption = productOption;
+
+	public void setOptionNo(String optionNo) {
+		this.optionNo = optionNo;
 	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
 	public int getQty() {
 		return qty;
 	}
+
 	public void setQty(int qty) {
 		this.qty = qty;
 	}
+	
+	
 	
 	
 	
