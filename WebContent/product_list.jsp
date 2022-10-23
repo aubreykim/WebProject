@@ -60,13 +60,13 @@
 	<div>
 	  <ul class="nav justify-content-end">
 	    <li class="nav-item">
-	      <input type="button" id="orderByNew" value="최신등록순">
+	      <input type="button" id="orderByNew" class="btn btn-outline-light text-dark" value="최신등록순">
 	    </li>
 	    <li class="nav-item">
-	      <input type="button" id="orderByName" value="제품명">
+	      <input type="button" id="orderByName" class="btn btn-outline-light text-dark" value="제품명">
 	    </li>
 	    <li class="nav-item">
-	      <input type="button" id="orderByPrice" value="가격순">
+	      <input type="button" id="orderByPrice" class="btn btn-outline-light text-dark" value="가격순">
 	    </li>
 	  </ul>
 	</div>
@@ -83,7 +83,7 @@
 
 		<ul class="nav" style="width:100%;">
 		<c:forEach var="productVO" items="${productList }">
-			<li class="nav-item float-left text-center border p-1" style="width: 33%;">
+			<li class="nav-item float-left text-center p-1" style="width: 33%;">
 				<div>
 					<a href="controller?type=productdetail&productno=${productVO.productNo }">
 					<img src="./img/${productVO.thumnail }" alt="img" width="95%" height="400">
@@ -103,7 +103,7 @@
 
 	<p class="clearfix"></p>
 	<%
-		File f = new File("C:/MyStudy/60_web/Project/WebContent/include/paging.jspf");
+		File f = new File("./WebContent/include/paging.jspf");
 		System.out.println(f.getAbsolutePath());
 		String file = f.getAbsolutePath();
 		request.setAttribute("file", file);

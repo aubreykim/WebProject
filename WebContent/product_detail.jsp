@@ -5,6 +5,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<jsp:useBean id="cartVO" class="com.mystudy.project.vo.CartVO" scope="request"/>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,28 +25,51 @@
     overflow: auto;    
   }
 </style>
-<script>
-	
+<script>	
+
+
 	$(function(){
 		
 		//기본으로 안 보여 주기		
 		$(".optiontbd").hide();
 		
-		$(".calTotalPrice").change(fnComputeOption);
+
+
+        
+		$(".qty").each(function(){
+			
+			$(this).change(function(){
+				
+				let originP = parseInt($(this).parent().parent().find("input:eq(3)").val());
+				let qty = parseInt($(this).val());
+				let eachSum = originP*qty;
+
+				$(this).parent().parent().find("input:eq(2)").val(eachSum);
+				
+				let totalPrice = 0;
+				
+		   		$(".eachPrice").each(function(){
+	    			
+	    			totalPrice += parseInt($(this).val());
+	    			$("#totalPrice").text(totalPrice);
+	    		});
+				
+			})
+
+		});
+		
+		
+		$(".deleteOption").each(function(){
+			$(this).click(function(){
+				$(this).parent().find("input:eq(0)").val("0");
+				$(this).parent().parent().parent().hide();
+			})
+		});
 		
 	});
 	
-	function fnComputeOption () {
-		let totalPrice = 0;
-		$(".eachPrice").each(function(){
-			totalPrice += parseInt($(this).val());
-			$("#totalPrice").text(totalPrice);
-		});
-	}
+
 	
-	function PagingReview () {
-		alert("paging 연결해야 함");
-	}
 	
 	function select_opt(num) {
 		$(function(){
@@ -51,34 +77,27 @@
 		});
 	}
 	
-	function qty_delete(qtyid) {
+	
+	function qty_delete(frm) {
+		
 		alert("선택이 취소됩니다");
-
-		$("#qty"+qtyid).val(0);
-		$("#price"+qtyid).val(0);
-		$("#opt"+qtyid).hide();
+		$(frm).hide();
 
 	}
 	
-	function calPrice(qtyid){
-		
-		let originalPrice = parseInt($("#originalprice"+qtyid).val());
-		
-		let qty = parseInt($("#qty"+qtyid).val());
+	
+	
+	/*
 
-		$("#price"+qtyid).val(originalPrice*qty);
-		
+	function PagingReview () {
+		alert("paging 연결해야 함");
 	}
+	
+	
+
+	*/
 
 	function go_pay(frm) {
-		/* form으로 list를 전달해야 함 - cart, list 모두 */
-		/* 전달하고 받아야 하는 데이터 type(pay, cart), productNo(제품번호), productOption(사이즈문자열) qty(수량)*/
-		
-		/*
-			대충 이런 루트로
-			let list = new Array();
-			list.pust(cartVo);
-		*/
 		
 		frm.type.value = "pay";
 		
@@ -88,7 +107,8 @@
 		frm.submit();
 	}
 	
-	function add_cart(frm) {		
+	function add_cart(frm) {	
+		alert(frm.productOption.value);
 		frm.type.value = "addCart";
 		alert("장바구니에 추가되었습니다!!");
 		frm.action = "controller";
@@ -98,7 +118,7 @@
 	function add_like(frm) {
 		
 		alert("관심 목록에 추가되었습니다");
-		
+	
 		frm.type.value = "addLike";
 		frm.action = "controller";
 		frm.submit();
@@ -178,24 +198,24 @@
 								<tr>
 									<td> ${productVO.productName } ${size.optionSize }</td>
 									<td>
-										<input type="number" id="qty${size.optionNo }" name="qty" style="width: 60px" min="0" max="${size.optionCount }" value="0"
-											onchange="calPrice(${size.optionNo })" class="calTotalPrice">
-										<input type="button" onclick="qty_delete(${size.optionNo })" value="x">				
+										<input type="number" name="qty" style="width: 60px" min="0" max="${size.optionCount }" value="0"
+											class="qty border-0">
+										<input type="button" class="deleteOption btn btn-outline-light text-dark " value="x">				
 									</td>
 									<td>
-										<input type="text" id="price${size.optionNo }" name="eachPrice" value="0" size="3" class="eachPrice" readonly/>
-										<input type="hidden" id="originalprice${size.optionNo }" name="originPrice" value="${productVO.price }" size="3" disable/>
-										<input type='hidden' id="size${size.optionNo }"" name='productOption' value='${size.optionSize }'>
+										<input type="text" name="eachPrice" value="0" size="3" class="eachPrice border-0 font-weight-bold" readonly/>
+										<input type="hidden" name="originPrice" value="${productVO.price }" size="3" disable/>
+										<input type="hidden" name="productOption" value='${size.optionSize }'>
 									</td>
 								</tr>
 							</tbody>
 						</c:forEach>
 						<tr>
-							<td>
+							<td class="font-weight-bold">
 								totalPrice
 							</td>
-							<td id="totalPrice" colspan="2">
-								0
+							<td id="totalPrice" class="totalPrice font-weight-bold" colspan="2">
+							0
 							</td>
 						</tr>
 						<tr>
@@ -206,7 +226,7 @@
 						</tr>
 					</table>
 					<hr>
-					<div>
+					<div class="text-center">
 						<button class="btn btn-outline-light text-dark" onclick="go_pay(this.form)">바로구매</button>
 						
 						<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>

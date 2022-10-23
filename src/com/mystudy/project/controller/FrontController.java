@@ -91,12 +91,13 @@ public class FrontController extends HttpServlet {
 			List<CartVO> list = new ArrayList<CartVO>();
 
 			String productNo = request.getParameter("productNo");
-			String productOption = request.getParameter("productOption");
+			String[] productOption = request.getParameterValues("productOption");
 			
 			System.out.println("productNo: " + productNo);
-			System.out.println("productOption: " + productOption);
+			System.out.println("productOption: " + productOption[0] +", " + productOption[1]);
+			//드디여 배열값 찾음 이대로 vo만들어서 처리하면 됨 
 			
-			String optionNo = DAO.getOptionNo(productNo, productOption);
+			//String optionNo = DAO.getOptionNo(productNo, productOption);
 
 			String qty = request.getParameter("qty");
 			
@@ -105,10 +106,10 @@ public class FrontController extends HttpServlet {
 			// session 연결된 아이디 긁어다 쓰면 되니까 전달 안 해 줘도 될 것 같음
 			
 			
-			CartVO vo = new CartVO("1", optionNo, userId, Integer.valueOf(qty));
+			//CartVO vo = new CartVO("1", optionNo, userId, Integer.valueOf(qty));
 			//System.out.println("vo: "+ vo.getQty());
 			
-			list.add(vo);
+			//list.add(vo);
 			
 			request.setAttribute("list", list);
 			//단일 상품 결제를 위한 List<CartVO> list 전달 (옵션은 여러개일 수 있음)
@@ -134,6 +135,7 @@ public class FrontController extends HttpServlet {
 
 			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
+	
 		
 		
 		if (type.equals("addLike")) {
