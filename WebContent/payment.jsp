@@ -11,6 +11,7 @@
 <%
 	List<CartVO> list = (List<CartVO>) request.getAttribute("list");
 	System.out.println("payment page list: "+ list);
+	System.out.println("payment page list.size(): "+ list.size());
 	
 	for (CartVO vo : list) {
 		System.out.println("payment page vo: "+ vo);

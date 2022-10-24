@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.mystudy.project.mybatis.DBService;
 import com.mystudy.project.vo.CartVO;
+import com.mystudy.project.vo.LikeVO;
 import com.mystudy.project.vo.ProductVO;
 import com.mystudy.project.vo.ReviewVO;
 import com.mystudy.project.vo.SizeVO;
@@ -22,13 +23,19 @@ public class DAO {
 		return categoryNo;		
 	}
 
-	public static int getTotalCount(int categoryNo) {
+	public static int getTotalCount(String categoryNo) {
 		SqlSession ss = DBService.getFactory().openSession(true);
 		int totalCount = ss.selectOne("project.selectTotalCount", categoryNo);
 		ss.close();
 		return totalCount;
 	}
 	
+	public static List<ProductVO> getBestitems () {
+		SqlSession ss = DBService.getFactory().openSession(true);
+		List<ProductVO> list = ss.selectList("project.selectBest");
+		return list;
+	}
+
 	public static List<ProductVO> orderNew (int categoryNo, int begin, int end) {
 		Map <String, Integer> map = new HashMap<>();
 		// key값 category에 categoryNum, begin(key)에 begin값, end(key)에 end값(string)
@@ -40,6 +47,7 @@ public class DAO {
 		List<ProductVO> selectedList = ss.selectList("project.selectListNew", map);
 		return selectedList;
 	}
+
 	
 	public static List<ProductVO> orderName (int categoryNo, int begin, int end) {
 		Map <String, Integer> map = new HashMap<>();
@@ -76,29 +84,18 @@ public class DAO {
 		return list;
 	}
 	
-	public static List<ReviewVO> getProductReview (int productNo, int begin, int end) {
-		Map<String, Integer> map = new HashMap<>();
-		
-		map.put("productNo", productNo);
-		map.put("begin", begin);
-		map.put("end", end);
-		
-		SqlSession ss = DBService.getFactory().openSession(true);
-		List<ReviewVO> list = ss.selectList("project.selectReview", map);
-		return list;
-	}
-	
-	
-	public static int insertCart(String optionNo, String userId, String qty) {
+	public static int insertCart(String optionNo, String userId, String qty, String price) {
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("optionNo", optionNo);
 		map.put("userId", userId);
 		map.put("qty", qty);
+		map.put("price", price);
 		
 		SqlSession ss = DBService.getFactory().openSession(true);
 		
 		return ss.insert("project.insertCart", map);
+		
 	}
 
 	public static String getOptionNo (String productNo, String productOption) {
@@ -118,6 +115,15 @@ public class DAO {
 		return optionNo;
 	}
 	
+	public static LikeVO selectLike (String productNo, String userId) {
+		Map<String, String> map = new HashMap<>();
+		map.put("productNo", productNo);
+		map.put("userId", userId);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		return ss.selectOne("project.selectLikeProduct", map);
+	}
+	
 	public static int addLike (String productNo, String userId) {
 		Map<String, String> map = new HashMap<>();
 		map.put("productNo", productNo);
@@ -127,4 +133,39 @@ public class DAO {
 		return ss.insert("project.inserLikeProduct", map);
 	}
 	
+	public static int deleteLike (String productNo, String userId) {
+		Map<String, String> map = new HashMap<>();
+		map.put("productNo", productNo);
+		map.put("userId", userId);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		return ss.delete("project.deleteLikeProduct", map);
+	}
+	
+	
+	public static int getTotalReviewCount(String productNo) {
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		int totalCount = ss.selectOne("project.selectTotalReviewCount", productNo);
+		ss.close();
+		return totalCount;
+		
+	}
+	
+	public static List<ReviewVO> getProductReview (String productNo, int begin, int end) {
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("productNo", Integer.valueOf(productNo));
+		map.put("begin", begin);
+		map.put("end", end);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		List<ReviewVO> list = ss.selectList("project.selectReview", map);
+		return list;
+	}
+
+
+
+
 }
+

@@ -9,7 +9,10 @@ public class ProductVO {
 	String content;
 	String thumnail;
 	String originalImg;
+	
 	int rate;
+	
+	
 	public String getProductNo() {
 		return productNo;
 	}

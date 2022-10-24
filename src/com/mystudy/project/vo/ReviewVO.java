@@ -9,7 +9,6 @@ public class ReviewVO {
 	String userName;
 	String wdate;
 	String productNo;
-
 	int hit;
 
 	

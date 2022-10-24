@@ -109,7 +109,10 @@
 		request.setAttribute("file", file);
 		//절대 경로 삽입법 다시 공부
 	%>
-	<%@ include file="include/paging.jspf" %>
+
+	<c:if test="${not empty p}">
+		<%@ include file="include/paging.jspf" %>
+	</c:if>
 	
 </div>
 

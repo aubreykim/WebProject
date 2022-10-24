@@ -14,7 +14,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 <style>
@@ -27,13 +27,10 @@
 </style>
 <script>	
 
-
 	$(function(){
 		
 		//기본으로 안 보여 주기		
 		$(".optiontbd").hide();
-		
-
 
         
 		$(".qty").each(function(){
@@ -66,6 +63,61 @@
 			})
 		});
 		
+		
+		$(".pritems").each(function(){
+			$(this).click(function(){
+				$(this).parent().find("input:eq(0)").val("0");
+				$(this).parent().parent().parent().hide();
+			})
+		});
+		
+
+		$(".pritems").each(function(){
+			
+			$(this).click(function(){
+				
+				alert("클릭됨");
+				$.ajax("ajaxController", {
+					//get타입으로 전달해 주는 것
+					type : "get",
+					data : "productNo=${productVO.productNo}&reviewPage="+$(this).attr('value'), //서버쪽으로 전달할 데이터
+					//서버쪽으로 전달해 줄 데이터(파라미터) 여기에서는 전부 가져올 거라 안 적어 줘도 됨
+					dataType : "json", //응답 받을 데이터 타입
+					success : function(data){
+						//여기에서 function의 파라미터 data는 위의 date랑 다른 것
+						alert("Ajax 처리 성공 - 응답받은 데이터 : " + data);
+
+						console.log(data.list);
+						console.log(data.paging);
+						
+						let rList = data.list; //JSON 객체 속성명 "list"의 값 추출
+						let paging = data.paging; //JSON 객체 속성명 "list"의 값 추출
+
+						//전달받은 JSON 데이터 처리
+						let htmlTag = "";
+						$.each(rList, function(index, item){ // 아이템이 끝날 때까지
+							console.log(this.reviewNo);
+							htmlTag += "<tr>";	
+							htmlTag += "<td>"+this.reviewNo+"</td>";	
+							htmlTag += "<td>"+this.title+"</td>";	
+							htmlTag += "<td>"+this.userName+"</td>";	
+							htmlTag += "<td>"+this.wdate+"</td>";	
+							<!-- htmlTag += "<td>"+this.hit+"</td>";-->
+							htmlTag += "</tr>";	
+						});
+						$("#productReview").html(htmlTag);
+					},
+					error : function(jqXHR, textStatus, errorThrown){
+						alert("Ajax 처리 실패 : \n"
+								+ "jqXHR : " + jqXHR.readyState + "\n"
+								+ "textStatus : " + textStatus + "\n"
+								+ "errorThrown : " + errorThrown);
+					}
+				});	
+			});
+			
+		});
+
 	});
 	
 
@@ -87,15 +139,6 @@
 	
 	
 	
-	/*
-
-	function PagingReview () {
-		alert("paging 연결해야 함");
-	}
-	
-	
-
-	*/
 
 	function go_pay(frm) {
 		
@@ -117,11 +160,21 @@
 	
 	function add_like(frm) {
 		
-		alert("관심 목록에 추가되었습니다");
-	
+		if ("${empty likeVO}") {
+			
+			alert("관심 목록에 추가되었습니다");	
+			
+		} else {
+			
+ 			alert("관심 목록에서 삭제되었습니다");
+ 			
+		}
+		
 		frm.type.value = "addLike";
 		frm.action = "controller";
-		frm.submit();
+		frm.submit();			
+		
+	
 	}
 	
 </script>
@@ -232,7 +285,14 @@
 						<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>
 						
 						<!-- 관심상품 등록 및 해제 페이지 이동 없이 처리 가능한지 추후 구현 -->
-						<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
+						<c:choose>
+							<c:when test="${empty likeVO }">
+								<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
+							</c:when>
+							<c:otherwise>							
+								<button class="btn btn-outline-light text-dark btn-dark" onclick="add_like(this.form)">관심상품</button>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</form>				
 			</div>
@@ -283,16 +343,16 @@
 		 			<th>조회</th>
 		 		</tr>
 		 	</thead>
-		 	<tbody id="ProductReview">
-		 		<c:forEach var="reviewVO" items="${reviewList }">
-			 		<tr>
-		 	 			<td>${reviewVO.reviewNo }</td>
-		 	 			<td>${reviewVO.title }</td>
-		 	 			<td>${reviewVO.userName }</td>
-		 	 			<td>${reviewVO.wdate.substring(0, 10) }</td>
-		 	 			<td>${reviewVO.hit}</td>
-		 	 		</tr>
-		 		</c:forEach>
+		 	<tbody id="productReview">
+	 		<c:forEach var="reviewVO" items="${reviewList }">
+ 			<tr>
+	 			<td>${reviewVO.reviewNo }</td>
+	 			<td>${reviewVO.title }</td>
+	 			<td>${reviewVO.userName }</td>
+	 			<td>${reviewVO.wdate.substring(0, 10) }</td>
+	 			<td>${reviewVO.hit}</td>
+	 		</tr>
+			</c:forEach>
 		 	</tbody>
 		 </table>
 		 <div class="text-right">
@@ -326,7 +386,7 @@
 	 			<th>조회</th>
 	 		</tr>
 	 	</thead>
-	 	<tbody>
+	 	<tbody id="productQnA">
  			<tr>
 	 			<td>1</td>
 	 			<td>테스트</td>
@@ -336,6 +396,9 @@
 	 		</tr>
 	 	</tbody>
 	 </table>
+		 <div>
+		 	<%@ include file="include/pagingReview.jspf" %>
+		 </div>
 		<div class="text-right">
 			<button class="btn btn-outline-light text-dark">상품문의하기</button>
 			<button class="btn btn-outline-light text-dark">모두보기</button>

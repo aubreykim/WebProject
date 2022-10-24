@@ -6,6 +6,7 @@ public class CartVO {
 	String optionNo;
 	String userId;
 	int qty;
+	int price;
 	
 	
 	
@@ -13,12 +14,23 @@ public class CartVO {
 		super();
 	}
 
-	public CartVO(String cartNo, String optionNo, String userId, int qty) {
+	public CartVO(String optionNo, String userId, int qty, int price) {
+		
+		this.cartNo = cartNo;
+		this.optionNo = optionNo;
+		this.userId = userId;
+		this.qty = qty;
+		this.price = price;
+		
+	}
+	
+	public CartVO(String cartNo, String optionNo, String userId, int qty, int price) {
 		super();
 		this.cartNo = cartNo;
 		this.optionNo = optionNo;
 		this.userId = userId;
 		this.qty = qty;
+		this.price = price;
 	}
 
 	
@@ -52,6 +64,14 @@ public class CartVO {
 
 	public void setQty(int qty) {
 		this.qty = qty;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 	
 	

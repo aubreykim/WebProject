@@ -11,11 +11,20 @@
 	WHERE CATEGORY_NAME = #{category}
 </select>
 
-<select id="selectTotalCount" parameterType="int" resultType="int">
+<select id="selectTotalCount" parameterType="String" resultType="int">
 	SELECT COUNT(*) 
 	FROM PRODUCT
 	WHERE CATEGORY_NO = #{categoryNo}
 </select>
+
+<select id="selectBest" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT P.*
+	FROM PRODUCT P, (SELECT SUM(AMOUNT) SUM, PRODUCT_NO FROM ORDER_DETAIL GROUP BY PRODUCT_NO) D
+	WHERE P.PRODUCT_NO = D.PRODUCT_NO
+	<![CDATA[AND ROWNUM <= 9]]>
+	ORDER BY D.SUM DESC
+</select>
+
 
 <select id="selectListNew" parameterType="map" resultType="com.mystudy.project.vo.ProductVO">
 	SELECT *
@@ -44,7 +53,6 @@
 	AND R_NUM BETWEEN #{begin} AND #{end}
 </select>
 
-
 <select id="selectProductVO" parameterType="string" resultType="com.mystudy.project.vo.ProductVO">
 	SELECT *
 	FROM PRODUCT
@@ -60,14 +68,20 @@
 
 
 <select id="selectReview" parameterType = "map" resultType="com.mystudy.project.vo.ReviewVO">
-	SELECT *
+	SELECT O.*
 	FROM ( SELECT ROWNUM R_NUM, R.*
-	       FROM (SELECT * FROM REVIEW 
-	       		WHERE PRODUCT_NO = #{productNo} 
-	       		ORDER BY REVIEW_NO DESC
-	       		) R
-	     )
+	       FROM (SELECT * 
+	       		FROM REVIEW 
+	       		WHERE PRODUCT_NO = 1
+	       		ORDER BY REVIEW_NO DESC) R
+	     ) O
 	WHERE R_NUM BETWEEN #{begin} AND #{end}
+</select>
+
+<select id="selectTotalReviewCount" parameterType="string" resultType="int">
+	SELECT COUNT(*) 
+	FROM REVIEW
+	WHERE PRODUCT_NO = #{productNo}
 </select>
 
 
@@ -81,15 +95,32 @@
 
 <insert id="insertCart" parameterType="map">
 	INSERT INTO CART
-        	(CART_NO, OPTION_NO, USER_ID, QTY)
-	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{qty})
+        	(CART_NO, OPTION_NO, USER_ID, QTY, PRICE)
+	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{qty}, #{price})
 </insert>
+
+
+<select id="selectLikeProduct" parameterType="map" resultType="com.mystudy.project.vo.LikeVO">
+
+	SELECT * 
+	FROM LIKE_PRODUCT
+	WHERE USER_ID = #{userId}
+	AND PRODUCT_NO = #{productNo}
+
+</select>
+
 
 <insert id="inserLikeProduct" parameterType="map">
 	INSERT INTO LIKE_PRODUCT
         	(LIKE_NO, PRODUCT_NO, USER_ID, LDATE)
 	VALUES (LIKE_NO_SEQ.NEXTVAL, #{productNo}, #{userId}, SYSDATE)
 </insert>
+
+<delete id="deleteLikeProduct" parameterType="map">
+	DELETE LIKE_PRODUCT
+	WHERE USER_ID = #{userId}
+	AND PRODUCT_NO = #{productNo}
+</delete>
 
 
 </mapper>

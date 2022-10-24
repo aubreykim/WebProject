@@ -1,6 +1,6 @@
 package com.mystudy.project.common;
 
-public class PagingReivew {
+public class PagingReview {
 	
 	private int nowPage = 1; // 현재 페이지
 	private int nowBlock = 1; // 현재 블록
