@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+	<style>
+	 #footer { font-size: 0.8em; }
+	</style>
 	<p class="py-3"></p>
     <div id="footer" class="text-center">
 		<ul class="nav flex-column">

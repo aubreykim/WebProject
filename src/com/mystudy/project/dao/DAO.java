@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import com.mystudy.project.mybatis.DBService;
+import com.mystudy.project.vo.CartListVO;
 import com.mystudy.project.vo.CartVO;
 import com.mystudy.project.vo.LikeVO;
 import com.mystudy.project.vo.ProductVO;
@@ -161,11 +162,47 @@ public class DAO {
 		
 		SqlSession ss = DBService.getFactory().openSession(true);
 		List<ReviewVO> list = ss.selectList("project.selectReview", map);
+		ss.close();
 		return list;
 	}
 
+	public static List<CartListVO> getCartList(String userId) {
 
+		SqlSession ss = DBService.getFactory().openSession(true);
+		List<CartListVO> list = ss.selectList("project.selectCartList", userId);
+		ss.close();
+		return list;
+		
+	}
 
+	public static void delectCart(String cartNo) {
+		SqlSession ss = DBService.getFactory().openSession(true);
+		ss.delete("project.deleteCart", cartNo);
+		ss.close();
+	}
+
+	public static void updateQtyCart(String qty, String cartNo, String userId) {
+		
+		Map<String, String> map = new HashMap<>();
+		
+		map.put("qty", qty);
+		map.put("cartNo", cartNo);
+		map.put("userId", userId);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		ss.update("project.updateQtyCart", map);
+		ss.close();
+		
+	}
+
+	
+	public static int getCartProductPrice(String cartNo) {
+
+		SqlSession ss = DBService.getFactory().openSession(true);
+		int result = ss.selectOne("project.selectCartPrice", cartNo);
+		ss.close();
+		return result;
+	}
 
 }
 

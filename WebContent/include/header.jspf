@@ -15,9 +15,9 @@
       </li>
       <li class="nav-item  active">
         <a class="nav-link" href="controller?type=join">join</a>
-      </li>
+
       <li class="nav-item  active">
-        <a class="nav-link" href="controller?type=cart">cart</a>
+        <a class="nav-link" href="controller?type=cartList">cart</a>
       </li>
     </ul>
     

@@ -18,6 +18,7 @@ import com.mystudy.project.common.Paging;
 import com.mystudy.project.common.PagingReview;
 import com.mystudy.project.dao.DAO;
 import com.mystudy.project.mybatis.DBService;
+import com.mystudy.project.vo.CartListVO;
 import com.mystudy.project.vo.CartVO;
 import com.mystudy.project.vo.LikeVO;
 import com.mystudy.project.vo.ProductVO;
@@ -183,6 +184,8 @@ public class FrontController extends HttpServlet {
 			
 			}
 			
+			response.sendRedirect("product_detail.jsp?productNo="+productNo);
+			
 		}
 	
 		if (type.equals("addLike")) {
@@ -205,6 +208,18 @@ public class FrontController extends HttpServlet {
 			response.sendRedirect("controller?type=productdetail&productno="+productNo);
 		}
 		
+		if (type.equals("cartList")) {
+			
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+			
+			List<CartListVO> list = DAO.getCartList(userId);
+			
+			request.setAttribute("list", list);
+			request.getRequestDispatcher("cart.jsp").forward(request, response);
+			
+		}
+		
 
 	}
 	
@@ -225,7 +240,7 @@ public class FrontController extends HttpServlet {
 		p.setTotalPage();
 		
 		String cPage =  request.getParameter("page");
-		
+
 		if (cPage != null) {
 			p.setNowPage(Integer.valueOf(cPage));
 		}
@@ -236,6 +251,7 @@ public class FrontController extends HttpServlet {
 		if (p.getEnd() > p.getTotalRecord()) {
 			p.setEnd(p.getTotalRecord());
 		}
+		
 		
 		int nowPage = p.getNowPage();
 		int beginPage = (nowPage - 1) / p.getNumPerBlock() * p.getNumPerBlock() + 1;

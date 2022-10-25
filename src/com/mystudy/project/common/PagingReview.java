@@ -98,6 +98,15 @@ public class PagingReview {
 	public void setEndPage(int endPage) {
 		this.endPage = endPage;
 	}
+
+	
+	@Override
+	public String toString() {
+		return "PagingReview [nowPage=" + nowPage + ", nowBlock=" + nowBlock + ", numPerPage=" + numPerPage
+				+ ", NumPerBlock=" + NumPerBlock + ", totalRecord=" + totalRecord + ", totalPage=" + totalPage
+				+ ", totalBlock=" + totalBlock + ", begin=" + begin + ", end=" + end + ", beginPage=" + beginPage
+				+ ", endPage=" + endPage + "]";
+	}
 	
 	
 	

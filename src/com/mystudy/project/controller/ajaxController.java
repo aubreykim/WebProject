@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mystudy.project.common.PagingReview;
 import com.mystudy.project.dao.DAO;
+import com.mystudy.project.vo.CartListVO;
 import com.mystudy.project.vo.ReviewVO;
 
 
@@ -23,27 +24,110 @@ public class ajaxController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=UTF-8");
 		
-		String productNo = request.getParameter("productNo");
-		String reviewPage = request.getParameter("reviewPage");
-		System.out.println(productNo + ", " + reviewPage);
+		String type = request.getParameter("type");
 		
-		PagingReview pr = reviewPaging(productNo, request);
+		if (type.equals("deleteCart")) {
+			
+			String cartNo = request.getParameter("cartNo");
+			DAO.delectCart(cartNo);
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+			
+			List<CartListVO> list = DAO.getCartList(userId);
+			
+			String result = makeJson(list);
+			
+			System.out.println(result);
+			
+			PrintWriter out = response.getWriter();
+			out.print(result); //{"idx":1}
+		}
 		
-		List<ReviewVO> list = DAO.getProductReview(productNo, pr.getBegin(), pr.getEnd());
-		request.setAttribute("reviewList", list);
+		if (type.equals("updateQty")) {
+			
+			String cartNo = request.getParameter("cartNo");
+			String qty = request.getParameter("qty");
+
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+			
+			DAO.updateQtyCart(qty, cartNo, userId);
+			
+			
+			String result = makeJson(qty, cartNo);
+			
+			System.out.println(result);
+			
+			PrintWriter out = response.getWriter();
+			out.print(result); //{"idx":1}
+			
+			
+		}
 		
-		
-		//JSON 형식 문자열 만들기
-		//{"list" : [{}, {}, ..., {}]}
-		String result = makeJson(list, pr.getBeginPage(), pr.getEndPage());
-		System.out.println(result);
-		PrintWriter out = response.getWriter();
-		out.print(result); //{"idx":1}
+		if (type.equals("review")) {
+			
+			String productNo = request.getParameter("productNo");
+			String reviewPage = request.getParameter("reviewPage");		
+			
+			PagingReview pr = reviewPaging(productNo, request);
+			
+			request.setAttribute("pr", pr);
+			
+			List<ReviewVO> list = DAO.getProductReview(productNo, pr.getBegin(), pr.getEnd());
+			
+			// request.setAttribute("reviewList", list);
+			// request.setAttribute("pr", pr);
+			
+			
+			
+			//JSON 형식 문자열 만들기
+			//{"list" : [{}, {}, ..., {}]}
+			String result = makeJson(list, pr);
+			
+			System.out.println(result);
+			
+			PrintWriter out = response.getWriter();
+			out.print(result); //{"idx":1}
+			
+		}
 		
 	}
 	
 	
-	private String makeJson(List<ReviewVO> list, int beginPage, int endPage) {
+	private String makeJson (String qty, String cartNo) {
+		
+		StringBuilder result = new StringBuilder();
+		int cartPrice = DAO.getCartProductPrice(cartNo);
+		int updatedQty = Integer.parseInt(qty);
+		
+		result.append("{ \"qty\" : " + updatedQty + ", ");
+		result.append("\"cartPrice\" : " + cartPrice + "} ");
+
+		return result.toString();
+	}
+	
+	private String makeJson(List<CartListVO> list){
+		
+		StringBuilder result = new StringBuilder();
+
+		result.append("{ \"list\" : [");
+		for (CartListVO vo : list) {
+			result.append("{ \"cartNo\" : \"" + vo.getCartNo() + "\",");
+			result.append("\"productName\" : \"" + vo.getProductName() + "\",");
+			result.append("\"thumnail\" : \"" + vo.getThumnail() + "\",");
+			result.append("\"price\" : " + vo.getPrice() + ",");
+			result.append("\"qty\" : " + vo.getQty() + ",");
+			result.append("\"optionSize\" : \"" + vo.getOptionSize() + "\",");
+			result.append("\"productNo\" : \"" + vo.getProductNo() + "\"");
+			result.append("},");
+		}
+		result.deleteCharAt(result.length()-1);
+		result.append("] }");
+
+		return result.toString();
+	}
+	
+	private String makeJson(List<ReviewVO> list, PagingReview pr) {
 		//JSON 형식 문자열 만들기
 		StringBuilder result = new StringBuilder();
 		
@@ -60,10 +144,15 @@ public class ajaxController extends HttpServlet {
 		//마지막 콤마 지워주는 것
 		result.deleteCharAt(result.length()-1);
 		result.append("] , ");	
+		result.append("\"pr\" : { ");			
+		
+		result.append(" \"begin\" : " + pr.getBegin() + ",");			
+		result.append(" \"end\" : " + pr.getEnd() + ",");			
+		result.append(" \"beginPage\" : " + pr.getBeginPage() + ",");			
+		result.append(" \"endPage\" : " + pr.getEndPage() + ",");			
+		result.append(" \"nowPage\" : " + pr.getNowPage() + ",");			
+		result.append(" \"totalPage\" : " + pr.getTotalPage() + "");			
 
-		result.append("\"paging\" : { ");			
-		result.append(" \"beginPage\" : " + beginPage);			
-		result.append(" , \"endPage\" : " + endPage);			
 		result.append(" }"); // paging 괄호	
 		result.append(" }"); // review 괄호	
 		result.append(" }"); // 전체 괄호			
@@ -87,7 +176,7 @@ public class ajaxController extends HttpServlet {
 		pr.setTotalPage();
 		
 		String cPage = request.getParameter("reviewPage");
-		
+
 		if (cPage != null) {
 			pr.setNowPage(Integer.valueOf(cPage));
 		}
@@ -101,7 +190,6 @@ public class ajaxController extends HttpServlet {
 		}
 		
 		int nowPage = pr.getNowPage();
-
 		int beginPage =  (nowPage - 1) / pr.getNumPerBlock() * pr.getNumPerBlock() + 1;
 		
 		pr.setBeginPage(beginPage);
