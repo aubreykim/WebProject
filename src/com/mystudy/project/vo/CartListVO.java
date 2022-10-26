@@ -7,7 +7,7 @@ public class CartListVO {
 	String productName;
 	String thumnail;
 	int price;
-	int qty;
+	int amount;
 	int total;
 	String optionSize;
 	String productNo;
@@ -50,11 +50,11 @@ public class CartListVO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public int getQty() {
-		return qty;
+	public int getAmount() {
+		return amount;
 	}
-	public void setQty(int qty) {
-		this.qty = qty;
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 	public int getTotal() {
 		return total;

@@ -41,13 +41,15 @@ public class ajaxController extends HttpServlet {
 			
 			PrintWriter out = response.getWriter();
 			out.print(result); //{"idx":1}
+			
 		}
 		
 		if (type.equals("updateQty")) {
 			
 			String cartNo = request.getParameter("cartNo");
 			String qty = request.getParameter("qty");
-
+			System.out.println("cartNo: " + cartNo);
+			System.out.println("qty: " + qty);
 			String userId = "ff";
 			// String userId =  (String) request.getSession().getAttribute("user").userId;
 			
@@ -78,8 +80,6 @@ public class ajaxController extends HttpServlet {
 			// request.setAttribute("reviewList", list);
 			// request.setAttribute("pr", pr);
 			
-			
-			
 			//JSON 형식 문자열 만들기
 			//{"list" : [{}, {}, ..., {}]}
 			String result = makeJson(list, pr);
@@ -91,6 +91,52 @@ public class ajaxController extends HttpServlet {
 			
 		}
 		
+		if (type.equals("deleteCartAll")) {
+			
+			int result = DAO.deleteCartAll();
+			
+			String json = "{ \"result\" : " + result + "}";
+			PrintWriter out = response.getWriter();
+			out.print(json);
+			
+		}
+		
+		
+		if (type.equals("addLike")) {
+			
+			String productNo = request.getParameter("productNo");
+			String userId = "ff";
+			// String userId =  (String) request.getSession().getAttribute("user").userId;
+			
+			int result = 0;
+			
+			String from = request.getParameter("from");
+			
+			
+			if (from.equals("productDetail")) {
+				
+				if (DAO.selectLike(productNo, userId) == null) {
+					result = DAO.insertLike(productNo, userId);
+					System.out.println("관심목록 추가되었습니다");
+				} else {
+					DAO.deleteLike(productNo, userId);
+					System.out.println("관심목록에서 삭제되었습니다");
+				}
+				
+			} else {
+				
+				if (DAO.selectLike(productNo, userId) == null) {
+					result = DAO.insertLike(productNo, userId);
+					System.out.println("관심목록 추가되었습니다");
+				}
+				
+			}
+			
+			String json = "{ \"result\" : " + result + "}";
+			PrintWriter out = response.getWriter();
+			out.print(json);
+			
+		}
 	}
 	
 	
@@ -111,17 +157,19 @@ public class ajaxController extends HttpServlet {
 		StringBuilder result = new StringBuilder();
 
 		result.append("{ \"list\" : [");
-		for (CartListVO vo : list) {
-			result.append("{ \"cartNo\" : \"" + vo.getCartNo() + "\",");
-			result.append("\"productName\" : \"" + vo.getProductName() + "\",");
-			result.append("\"thumnail\" : \"" + vo.getThumnail() + "\",");
-			result.append("\"price\" : " + vo.getPrice() + ",");
-			result.append("\"qty\" : " + vo.getQty() + ",");
-			result.append("\"optionSize\" : \"" + vo.getOptionSize() + "\",");
-			result.append("\"productNo\" : \"" + vo.getProductNo() + "\"");
-			result.append("},");
+		if (list.size() > 0) {
+			for (CartListVO vo : list) {
+				result.append("{ \"cartNo\" : \"" + vo.getCartNo() + "\",");
+				result.append("\"productName\" : \"" + vo.getProductName() + "\",");
+				result.append("\"thumnail\" : \"" + vo.getThumnail() + "\",");
+				result.append("\"price\" : " + vo.getPrice() + ",");
+				result.append("\"amount\" : " + vo.getAmount() + ",");
+				result.append("\"optionSize\" : \"" + vo.getOptionSize() + "\",");
+				result.append("\"productNo\" : \"" + vo.getProductNo() + "\"");
+				result.append("},");
+			}
+			result.deleteCharAt(result.length()-1);			
 		}
-		result.deleteCharAt(result.length()-1);
 		result.append("] }");
 
 		return result.toString();

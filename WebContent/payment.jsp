@@ -15,7 +15,7 @@
 	
 	for (CartVO vo : list) {
 		System.out.println("payment page vo: "+ vo);
-		System.out.println("payment page vo.qty: "+ vo.getQty());
+		System.out.println("payment page vo.amount: "+ vo.getAMOUNT());
 		System.out.println("payment page vo.optionNo: "+ vo.getOptionNo());
 	}
 %>

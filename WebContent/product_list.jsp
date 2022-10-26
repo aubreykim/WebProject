@@ -83,7 +83,7 @@
 		<c:forEach var="productVO" items="${productList }">
 			<li class="nav-item float-left text-center p-1" style="width: 33%;">
 				<div>
-					<a href="controller?type=productdetail&productno=${productVO.productNo }">
+					<a href="controller?type=productdetail&productNo=${productVO.productNo }">
 					<img src="./img/${productVO.thumnail }" alt="img" width="95%" height="400">
 					</a>
 				</div>

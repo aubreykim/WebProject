@@ -36,11 +36,14 @@
 			
 			$(this).change(function(){
 				
-				let originP = parseInt($(this).parent().parent().find("input:eq(3)").val());
+				let originP = parseInt($(this).parent().parent().find("td:eq(2)").find("input:eq(2)").val());
 				let qty = parseInt($(this).val());
 				let eachSum = originP*qty;
+				console.log("originP: " + originP);
+				console.log("eachSum = " + originP*qty);
 
 				$(this).parent().parent().find("input:eq(2)").val(eachSum);
+				console.log("eachsum: " + $(this).parent().parent().find("input:eq(2)").val());
 				
 				let totalPrice = 0;
 				
@@ -57,7 +60,16 @@
 		
 		$(".deleteOption").each(function(){
 			$(this).click(function(){
+				$(this).parent().parent().find("td:eq(2)").find("input:eq(0)").val("0");
 				$(this).parent().find("input:eq(0)").val("0");
+				
+				let totalPrice = 0;
+		   		$(".eachPrice").each(function(){
+	    			
+	    			totalPrice += parseInt($(this).val());
+	    			$("#totalPrice").text(totalPrice);
+	    		});
+		   		
 				$(this).parent().parent().parent().hide();
 			})
 		});
@@ -220,24 +232,44 @@
 		frm.submit();
 	}
 	
-	function add_like(frm) {
+	$(document).on("click", ".likeButton", function () {
 		
-		if ("${empty likeVO}") {
-			
-			alert("관심 목록에 추가되었습니다");	
-			
-		} else {
-			
- 			alert("관심 목록에서 삭제되었습니다");
- 			
-		}
+		let productNo = $("input[name=productNo]").val();
+		console.log(productNo);
 		
-		frm.type.value = "addLike";
-		frm.action = "controller";
-		frm.submit();			
-		
+  		$.ajax("ajaxController", {
+
+			type : "get",
+			data : "type=addLike&from=productDetail&productNo="+productNo,
+			dataType : "json",
+			success : function(data){
+				
+				//여기에서 function의 파라미터 data는 위의 date랑 다른 것
+				alert("Ajax 처리 성공 - 응답받은 데이터 : " + data);
+				
+				let result = data.result;
+				let htmlTag = "";
+				if (result == 1) {
+					alert("관심상품에 추가되었습니다");
+					htmlTag += '<input type="button" class="likeButton btn text-dark btn-outline-info" value="관심상품삭제">';				
+				} else {
+					alert("관심상품에서 삭제되었습니다");
+					htmlTag += '<input type="button" class="likeButton btn btn-outline-light text-dark" value="관심상품추가">';
+				}
+				
+				$("#likeButton").html(htmlTag);
+			},
+			error : function(jqXHR, textStatus, errorThrown){
+				alert("Ajax 처리 실패 : \n"
+						+ "jqXHR : " + jqXHR.readyState + "\n"
+						+ "textStatus : " + textStatus + "\n"
+						+ "errorThrown : " + errorThrown);
+			}
+			
+  	  	}) // ajax의 끝	
+
+	});
 	
-	}
 	
 </script>
 </head>
@@ -326,7 +358,8 @@
 									</td>
 									<td>
 										<input type="text" name="eachPrice" value="0" size="3" class="eachPrice border-0 font-weight-bold" readonly/>
-										<input type="hidden" name="originPrice" value="${productVO.price }" size="3" disable/>
+										<input type='hidden' name='productNo' value='${productVO.productNo}'>
+										<input type="hidden" name="price" value="${productVO.price }" size="3" disable/>
 										<input type="hidden" name="productOption" value='${size.optionSize }'>
 									</td>
 								</tr>
@@ -342,7 +375,6 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-							<input type='hidden' name='productNo' value='${productVO.productNo}'>
 							<input type='hidden' name='type' value='type'>
 							</td>
 						</tr>
@@ -352,16 +384,17 @@
 						<button class="btn btn-outline-light text-dark" onclick="go_pay(this.form)">바로구매</button>
 						
 						<button class="btn btn-outline-light text-dark" onclick="add_cart(this.form)">장바구니</button>
-						
-						<!-- 관심상품 등록 및 해제 페이지 이동 없이 처리 가능한지 추후 구현 -->
-						<c:choose>
-							<c:when test="${empty likeVO }">
-								<button class="btn btn-outline-light text-dark" onclick="add_like(this.form)">관심상품</button>
-							</c:when>
-							<c:otherwise>							
-								<button class="btn btn-outline-light text-dark btn-dark" onclick="add_like(this.form)">관심상품</button>
-							</c:otherwise>
-						</c:choose>
+						<span id="likeButton">
+							<!-- 관심상품 등록 및 해제 페이지 이동 없이 처리 가능한지 추후 구현 -->
+							<c:choose>
+								<c:when test="${empty likeVO }">
+									<input type="button" class="likeButton btn btn-outline-light text-dark" value="관심상품추가">
+								</c:when>
+								<c:otherwise>							
+									<input type="button" class="likeButton btn text-dark btn-outline-info" value="관심상품삭제">
+								</c:otherwise>
+							</c:choose>
+						</span>
 					</div>
 				</form>				
 			</div>
@@ -413,6 +446,11 @@
 		 		</tr>
 		 	</thead>
 		 	<tbody id="productReview">
+		 	<c:if test="${empty reviewList }">
+			 	<tr>
+		 			<td colspan="5">게시물이 없습니다</td>
+		 		</tr>
+		 	</c:if>
 	 		<c:forEach var="reviewVO" items="${reviewList }">
  			<tr>
 	 			<td>${reviewVO.reviewNo }</td>
@@ -428,9 +466,11 @@
 		 	<button class="btn btn-outline-light text-dark">상품리뷰쓰기</button>
 		 	<button class="btn btn-outline-light text-dark">모두보기</button>
 		 </div>
-		 <div id="pagingReview">
-			 <%@ include file="include/pagingReview.jspf" %>
-		 </div>
+		<c:if test="${not empty reviewList }">
+			<div id="pagingReview">
+				<%@ include file="include/pagingReview.jspf" %>
+			</div>
+	 	</c:if>
 	</div>
 	<p class="py-5"></p>
 	

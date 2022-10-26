@@ -85,12 +85,12 @@ public class DAO {
 		return list;
 	}
 	
-	public static int insertCart(String optionNo, String userId, String qty, String price) {
+	public static int insertCart(String optionNo, String userId, String amount, String price) {
 		
 		Map<String, String> map = new HashMap<>();
 		map.put("optionNo", optionNo);
 		map.put("userId", userId);
-		map.put("qty", qty);
+		map.put("amount", amount);
 		map.put("price", price);
 		
 		SqlSession ss = DBService.getFactory().openSession(true);
@@ -125,7 +125,7 @@ public class DAO {
 		return ss.selectOne("project.selectLikeProduct", map);
 	}
 	
-	public static int addLike (String productNo, String userId) {
+	public static int insertLike (String productNo, String userId) {
 		Map<String, String> map = new HashMap<>();
 		map.put("productNo", productNo);
 		map.put("userId", userId);
@@ -181,11 +181,11 @@ public class DAO {
 		ss.close();
 	}
 
-	public static void updateQtyCart(String qty, String cartNo, String userId) {
+	public static void updateQtyCart(String amount, String cartNo, String userId) {
 		
 		Map<String, String> map = new HashMap<>();
 		
-		map.put("qty", qty);
+		map.put("amount", amount);
 		map.put("cartNo", cartNo);
 		map.put("userId", userId);
 		
@@ -200,6 +200,13 @@ public class DAO {
 
 		SqlSession ss = DBService.getFactory().openSession(true);
 		int result = ss.selectOne("project.selectCartPrice", cartNo);
+		ss.close();
+		return result;
+	}
+	
+	public static int deleteCartAll () {
+		SqlSession ss = DBService.getFactory().openSession(true);
+		int result = ss.delete("project.deleteCartAll");
 		ss.close();
 		return result;
 	}

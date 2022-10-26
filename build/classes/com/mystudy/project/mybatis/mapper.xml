@@ -94,8 +94,8 @@
 
 <insert id="insertCart" parameterType="map">
 	INSERT INTO CART
-        	(CART_NO, OPTION_NO, USER_ID, QTY, PRICE)
-	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{qty}, #{price})
+        	(CART_NO, OPTION_NO, USER_ID, AMOUNT, PRICE)
+	VALUES  (CART_NO_SEQ.NEXTVAL, #{optionNo}, #{userId}, #{amount}, #{price})
 </insert>
 
 
@@ -109,7 +109,7 @@
 </select>
 
 <select id="selectCartList" parameterType="string" resultType="com.mystudy.project.vo.CartListVO">
-	SELECT C.USER_ID, C.CART_NO, P.PRODUCT_NAME, P.THUMNAIL, P.PRICE, C.QTY, C.QTY*P.PRICE AS TOTAL, O.OPTION_SIZE, P.PRODUCT_NO
+	SELECT C.USER_ID, C.CART_NO, P.PRODUCT_NAME, P.THUMNAIL, P.PRICE, C.AMOUNT, C.AMOUNT*P.PRICE AS TOTAL, O.OPTION_SIZE, P.PRODUCT_NO
 	FROM CART C, PRODUCT P, PRODUCT_OPTION O
 	WHERE C.OPTION_NO = O.OPTION_NO
 	AND O.PRODUCT_NO = P.PRODUCT_NO
@@ -124,10 +124,16 @@
 
 <update id="updateQtyCart" parameterType="map">
 	UPDATE CART
-	SET QTY = #{qty}
+	SET AMOUNT = #{amount}
 	WHERE CART_NO = #{cartNo}
 	AND USER_ID = #{userId}
 </update>
+
+<delete id="deleteCartAll">
+	DELETE CART
+	WHERE 1=1
+</delete>
+
 
 <insert id="inserLikeProduct" parameterType="map">
 	INSERT INTO LIKE_PRODUCT
@@ -146,6 +152,5 @@
 	FROM CART
 	WHERE CART_NO = #{cartNo}
 </select>
-
 
 </mapper>

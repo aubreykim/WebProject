@@ -2,6 +2,7 @@ package com.mystudy.project.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class FrontController extends HttpServlet {
 
 		if (type.equals("productdetail")) {
 			
-			String productNo = request.getParameter("productno");
+			String productNo = request.getParameter("productNo");
 			System.out.println("productNo" + productNo);
 			
 			ProductVO vo = DAO.getProductInfo(productNo);
@@ -123,36 +124,51 @@ public class FrontController extends HttpServlet {
 		}
 		
 		if (type.equals("pay")) {
-
-			List<CartVO> list = new ArrayList<CartVO>();
-
-			String productNo = request.getParameter("productNo");
-			String[] originPrice = request.getParameterValues("originPrice");
+			//바로결제로 <CartVO>를 넘기거나, 장바구니에서 <CartNo> List를 넘김
+			//CartVO로 된 list는 CartNo가 없음 optionNo, userId, amount, price만
+			//productNo가 필요하면 결제 페이지에서 select
 			
-			String[] qty = request.getParameterValues("qty");
-			String[] productOption = request.getParameterValues("productOption");
-			String optionNo[] = new String[productOption.length];
+			String[] cartNo = request.getParameterValues("cartNo");
+			
+			if (cartNo == null) {
 
-			String userId = "ff";
-			// String userId =  (String) request.getSession().getAttribute("user").userId;
-			// session 연결된 아이디 긁어다 쓰면 되니까 전달 안 해 줘도 될 것 같음
-
-			for (int i = 0; i < productOption.length; i++) {
+				List<CartVO> list = new ArrayList<CartVO>();
 				
-				optionNo[i] = DAO.getOptionNo(productNo, productOption[i]);
-			}
-			
-			for (int i = 0; i < productOption.length; i++) {
-				if (qty[i].equals("0")) continue;				
-				list.add(new CartVO(optionNo[i], userId, Integer.valueOf(qty[i]), Integer.valueOf(originPrice[i])));
-			}
+				String[] productNo = request.getParameterValues("productNo");
+				String[] price = request.getParameterValues("price");
+				String[] qty = request.getParameterValues("qty");
+				String[] optionSize = request.getParameterValues("optionSize");
+				
+				System.out.println(optionSize);
+				
+				String optionNo[] = new String[optionSize.length];
+				String userId = "ff";
+				// String userId =  (String) request.getSession().getAttribute("user").userId;
+				// session 연결된 아이디 긁어다 쓰면 되니까 전달 안 해 줘도 될 것 같음
 
+				for (int i = 0; i < optionSize.length; i++) {
+					optionNo[i] = DAO.getOptionNo(productNo[i], optionSize[i]);
+				}
+				
+				for (int i = 0; i < optionSize.length; i++) {
+					if (qty[i].equals("0")) continue;				
+					list.add(new CartVO(optionNo[i], userId, Integer.valueOf(qty[i]), Integer.valueOf(price[i])));
+				}
+
+				request.setAttribute("list", list);
+				
+			} else {
+				
+				List<String> list = Arrays.asList(cartNo);
+				System.out.println("cart에서 넘긴 리스트 : " + list);
+				request.setAttribute("list", list);
+			}
 			
-			request.setAttribute("list", list);
 			//단일 상품 결제를 위한 List<CartVO> list 전달 (옵션은 여러개일 수 있음)
 			
 			//payment 페이지 구현 전
 			request.getRequestDispatcher("payment.jsp").forward(request, response);
+
 			
 		}
 		
@@ -161,7 +177,7 @@ public class FrontController extends HttpServlet {
 			List<CartVO> list = new ArrayList<CartVO>();
 
 			String productNo = request.getParameter("productNo");
-			String[] originPrice = request.getParameterValues("originPrice");
+			String[] price = request.getParameterValues("price");
 			
 			String[] qty = request.getParameterValues("qty");
 			String[] productOption = request.getParameterValues("productOption");
@@ -180,34 +196,15 @@ public class FrontController extends HttpServlet {
 			for (int i = 0; i < productOption.length; i++) {
 			
 				if (qty[i].equals("0")) continue;	
-				DAO.insertCart(optionNo[i], userId, qty[i], originPrice[i]);
+				DAO.insertCart(optionNo[i], userId, qty[i], price[i]);
 			
 			}
-			
-			response.sendRedirect("product_detail.jsp?productNo="+productNo);
+			System.out.println("addCart의 productNo: " + productNo);
+			//request.getRequestDispatcher("controller?type=productdetail").forward(request, response);
+			response.sendRedirect("controller?type=productdetail&productNo="+productNo);
 			
 		}
 	
-		if (type.equals("addLike")) {
-			
-			String productNo = request.getParameter("productNo");
-			String userId = "ff";
-			// String userId =  (String) request.getSession().getAttribute("user").userId;
-
-			
-			if (DAO.selectLike(productNo, userId) == null) {
-				System.out.println("관심목록 추가됨");
-				DAO.addLike(productNo, userId);
-				
-			} else {
-				
-				System.out.println("관심목록 삭제됨");
-				DAO.deleteLike(productNo, userId);
-			}
-			
-			response.sendRedirect("controller?type=productdetail&productno="+productNo);
-		}
-		
 		if (type.equals("cartList")) {
 			
 			String userId = "ff";
