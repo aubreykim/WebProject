@@ -215,13 +215,17 @@
 	
 
 	function go_pay(frm) {
-		
+		if ("${null eq userId }") {
+			alert("회원 전용 서비스입니다");
+			return false;
+		} 
 		frm.type.value = "pay";
 		
 		alert("결제 페이지로 이동합니다");
 		
 		frm.action = "controller";
 		frm.submit();
+
 	}
 	
 	function add_cart(frm) {	
