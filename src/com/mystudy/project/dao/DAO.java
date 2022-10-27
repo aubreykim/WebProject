@@ -36,6 +36,13 @@ public class DAO {
 		List<ProductVO> list = ss.selectList("project.selectBest");
 		return list;
 	}
+	
+	public static List<ProductVO> getNewitems () {
+		SqlSession ss = DBService.getFactory().openSession(true);
+		List<ProductVO> list = ss.selectList("project.selectNewest");
+		return list;
+	}
+	
 
 	public static List<ProductVO> orderNew (int categoryNo, int begin, int end) {
 		Map <String, Integer> map = new HashMap<>();

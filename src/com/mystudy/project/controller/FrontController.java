@@ -53,10 +53,9 @@ public class FrontController extends HttpServlet {
 				request.setAttribute("productList", productList);
 				
 			} else if (category.equals("NEW")) {
-				//임시로 best로 연결되게 구현
 				categoryNo = "0";
 				
-				List<ProductVO> productList = DAO.getBestitems();
+				List<ProductVO> productList = DAO.getNewitems();
 				
 				request.setAttribute("productList", productList);
 

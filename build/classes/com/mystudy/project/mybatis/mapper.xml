@@ -25,6 +25,12 @@
 	ORDER BY D.SUM DESC
 </select>
 
+<select id="selectNewest" resultType="com.mystudy.project.vo.ProductVO">
+	SELECT ROWNUM, P.*
+	FROM (SELECT * FROM PRODUCT P ORDER BY PRODUCT_NO DESC) P
+	<![CDATA[ WHERE ROWNUM <= 9]]>
+</select>
+
 
 <select id="selectListNew" parameterType="map" resultType="com.mystudy.project.vo.ProductVO">
 	SELECT *
